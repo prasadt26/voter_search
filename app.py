@@ -5,7 +5,7 @@ from pathlib import Path
 # -------------------------------
 # CONFIG
 # -------------------------------
-DATA_FILE = Path("voters.json")
+DATA_FILE = Path("voters_32.json")
 
 st.set_page_config(
     page_title="Voter Search",
@@ -47,6 +47,7 @@ if query:
     results = [
         v for v in voters
         if q in (
+            f"{v.get('record_serial', '')} "
             f"{v.get('name','')} "
             f"{v.get('epic_no','')} "
             f"{v.get('door_no','')} "
@@ -66,11 +67,11 @@ for v in results:
         st.markdown(f"### {v.get('name', 'N/A')}")
 
         # META ROW
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 , col4 = st.columns(4)
         col1.metric("Age", v.get("age", "N/A"))
         col2.metric("Sex", v.get("sex", "N/A"))
         col3.metric("EPIC", v.get("epic_no", "N/A"))
-
+        col4.metric("Serial", v.get("record_serial", "N/A"))
         # DETAILS (COMPACT)
         st.write(
             f"👨‍👩‍👧 **{v.get('relation_type','Relation')}**: {v.get('relation_name','N/A')}"
