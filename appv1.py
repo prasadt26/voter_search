@@ -3,56 +3,8 @@ import json
 from pathlib import Path
 
 # -------------------------------
-# AUTH CONFIG (FROM users.json)
-# -------------------------------
-USERS_FILE = Path("users.json")
-
-def load_users():
-    if not USERS_FILE.exists():
-        return {}
-    with open(USERS_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-def is_authenticated():
-    return st.session_state.get("authenticated", False)
-
-def login(username, password):
-    users = load_users()
-    if users.get(username) == password:
-        st.session_state["authenticated"] = True
-        st.session_state["username"] = username
-        return True
-    return False
-
-def logout():
-    st.session_state.clear()
-
-# -------------------------------
-# LOGIN PAGE
-# -------------------------------
-if not is_authenticated():
-    st.set_page_config(page_title="Login", layout="centered")
-    st.title("🔐 Voter Search Login")
-
-    with st.form("login_form"):
-        username = st.text_input("Username")
-        password = st.text_input("Password", type="password")
-        submit = st.form_submit_button("Login")
-
-    if submit:
-        if login(username, password):
-            st.success("✅ Login successful")
-            st.rerun()
-        else:
-            st.error("❌ Invalid username or password")
-
-    st.stop()
-
-# -------------------------------
-# MAIN APP (YOUR CODE)
-# -------------------------------
-
 # CONFIG
+# -------------------------------
 DATA_FILE = Path("voters_32.json")
 
 st.set_page_config(
@@ -60,15 +12,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# HEADER + LOGOUT
-col_title, col_logout = st.columns([6, 1])
-with col_title:
-    st.title("🗳️ Voter Search")
-with col_logout:
-    st.write("")
-    if st.button("🚪 Logout"):
-        logout()
-        st.rerun()
+st.title("🗳️ Voter Search")
 
 # -------------------------------
 # LOAD JSON
@@ -117,17 +61,20 @@ st.subheader(f"📊 {len(results)} result(s)")
 # RESULTS — NATIVE CARD UI
 # -------------------------------
 if query != "":
+
     for v in results:
         with st.container(border=True):
 
+            # NAME
             st.markdown(f"### {v.get('name', 'N/A')}")
 
-            col1, col2, col3, col4 = st.columns(4)
+            # META ROW
+            col1, col2, col3 , col4 = st.columns(4)
             col1.metric("Age", v.get("age", "N/A"))
             col2.metric("Sex", v.get("sex", "N/A"))
             col3.metric("EPIC", v.get("epic_no", "N/A"))
             col4.metric("Serial", v.get("record_serial", "N/A"))
-
+            # DETAILS (COMPACT)
             st.write(
                 f"👨‍👩‍👧 **{v.get('relation_type','Relation')}**: {v.get('relation_name','N/A')}"
             )
