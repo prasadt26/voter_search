@@ -60,24 +60,26 @@ st.subheader(f"📊 {len(results)} result(s)")
 # -------------------------------
 # RESULTS — NATIVE CARD UI
 # -------------------------------
-for v in results:
-    with st.container(border=True):
+if query != "":
 
-        # NAME
-        st.markdown(f"### {v.get('name', 'N/A')}")
+    for v in results:
+        with st.container(border=True):
 
-        # META ROW
-        col1, col2, col3 , col4 = st.columns(4)
-        col1.metric("Age", v.get("age", "N/A"))
-        col2.metric("Sex", v.get("sex", "N/A"))
-        col3.metric("EPIC", v.get("epic_no", "N/A"))
-        col4.metric("Serial", v.get("record_serial", "N/A"))
-        # DETAILS (COMPACT)
-        st.write(
-            f"👨‍👩‍👧 **{v.get('relation_type','Relation')}**: {v.get('relation_name','N/A')}"
-        )
-        st.write(f"🏠 **Door No:** {v.get('door_no','N/A')}")
-        st.write(
-            f"🗺️ **AC / PS / SL:** "
-            f"{v.get('ac_no','-')} / {v.get('ps_no','-')} / {v.get('sl_no','-')}"
-        )
+            # NAME
+            st.markdown(f"### {v.get('name', 'N/A')}")
+
+            # META ROW
+            col1, col2, col3 , col4 = st.columns(4)
+            col1.metric("Age", v.get("age", "N/A"))
+            col2.metric("Sex", v.get("sex", "N/A"))
+            col3.metric("EPIC", v.get("epic_no", "N/A"))
+            col4.metric("Serial", v.get("record_serial", "N/A"))
+            # DETAILS (COMPACT)
+            st.write(
+                f"👨‍👩‍👧 **{v.get('relation_type','Relation')}**: {v.get('relation_name','N/A')}"
+            )
+            st.write(f"🏠 **Door No:** {v.get('door_no','N/A')}")
+            st.write(
+                f"🗺️ **AC / PS / SL:** "
+                f"{v.get('ac_no','-')} / {v.get('ps_no','-')} / {v.get('sl_no','-')}"
+            )
