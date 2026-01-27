@@ -61,7 +61,7 @@ if not is_authenticated():
 
 # CONFIG
 # DATA_FILE = Path("voters_32.json")
-st.sidebar.header("📍 Division Selection")
+# st.sidebar.header("📍 Division Selection")
 
 allowed_divisions = st.session_state.get("divisions")
 
@@ -70,12 +70,23 @@ if allowed_divisions == "ALL":
 else:
     division_options = [f"Division-{i}" for i in allowed_divisions]
 
-division = st.sidebar.selectbox(
-    "Select Division",
-    options=division_options
-)
+# division = st.sidebar.selectbox(
+#     "Select Division",
+#     options=division_options
+# )
+st.subheader("📍 Select Division")
+
+col_left, col_center, col_right = st.columns([1, 2, 1])
+
+with col_center:
+    division = st.selectbox(
+        "Division",
+        options=division_options,
+        label_visibility="collapsed"
+    )
 
 division_number = division.split("-")[1]
+
 DATA_FILE = Path("data") / f"division_{division_number}.json"
 
 st.set_page_config(
