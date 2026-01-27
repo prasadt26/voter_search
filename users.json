@@ -5,7 +5,7 @@
   },
   "user1": {
     "password": "user123",
-    "divisions": [1, 2, 3, 4, 5]
+    "divisions": [32, 34]
   },
   "user2": {
     "password": "user456",

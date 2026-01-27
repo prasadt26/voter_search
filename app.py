@@ -170,7 +170,7 @@ if query:
         ).lower()
     ]
 
-st.subheader(f"📊 {len(results)} result(s)")
+st.subheader(f"📊 {len(results)} Voter(s)")
 
 # -------------------------------
 # RESULTS — NATIVE CARD UI
