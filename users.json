@@ -1,4 +1,14 @@
 {
-  "admin": "admin123",
-  "operator": "op123"
+  "admin": {
+    "password": "admin123",
+    "divisions": "ALL"
+  },
+  "user1": {
+    "password": "user123",
+    "divisions": [1, 2, 3, 4, 5]
+  },
+  "user2": {
+    "password": "user456",
+    "divisions": [10, 12, 15]
+  }
 }

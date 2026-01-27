@@ -18,14 +18,21 @@ def is_authenticated():
 
 def login(username, password):
     users = load_users()
-    if users.get(username) == password:
+    user = users.get(username)
+
+    if user and user.get("password") == password:
         st.session_state["authenticated"] = True
         st.session_state["username"] = username
+        st.session_state["divisions"] = user.get("divisions")
         return True
+
     return False
 
+
 def logout():
+    st.cache_data.clear()
     st.session_state.clear()
+
 
 # -------------------------------
 # LOGIN PAGE
@@ -53,7 +60,23 @@ if not is_authenticated():
 # -------------------------------
 
 # CONFIG
-DATA_FILE = Path("voters_32.json")
+# DATA_FILE = Path("voters_32.json")
+st.sidebar.header("📍 Division Selection")
+
+allowed_divisions = st.session_state.get("divisions")
+
+if allowed_divisions == "ALL":
+    division_options = [f"Division-{i}" for i in range(1, 61)]
+else:
+    division_options = [f"Division-{i}" for i in allowed_divisions]
+
+division = st.sidebar.selectbox(
+    "Select Division",
+    options=division_options
+)
+
+division_number = division.split("-")[1]
+DATA_FILE = Path("data") / f"division_{division_number}.json"
 
 st.set_page_config(
     page_title="Voter Search",
@@ -77,13 +100,24 @@ if not DATA_FILE.exists():
     st.error("❌ voters.json not found")
     st.stop()
 
+# @st.cache_data(show_spinner=True)
+# def load_voters():
+#     with open(DATA_FILE, "r", encoding="utf-8") as f:
+#         return json.load(f)
+#
+# voters = load_voters()
+# st.caption(f"📂 {len(voters)} records loaded")
 @st.cache_data(show_spinner=True)
-def load_voters():
-    with open(DATA_FILE, "r", encoding="utf-8") as f:
+def load_voters(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
-voters = load_voters()
-st.caption(f"📂 {len(voters)} records loaded")
+if not DATA_FILE.exists():
+    st.error(f"❌ No data found for {division}")
+    st.stop()
+
+voters = load_voters(DATA_FILE)
+st.caption(f"📂 {division} • {len(voters)} records loaded")
 
 # -------------------------------
 # SEARCH (SINGLE INPUT)

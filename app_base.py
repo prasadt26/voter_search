@@ -5,7 +5,7 @@ from parser2 import parse_voter_txt
 
 st.set_page_config(page_title="Voter Search App", layout="wide")
 
-st.title("🗳️ Voter List Search")
+st.title("🗳️ Voter List Ingestion")
 
 uploaded_file = st.file_uploader("Upload voter TXT file", type=["txt"])
 
