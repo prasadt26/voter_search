@@ -6,6 +6,20 @@ from pathlib import Path
 # AUTH CONFIG (FROM users.json)
 # -------------------------------
 USERS_FILE = Path("users.json")
+def save_voters(file_path, voters):
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(voters, f, ensure_ascii=False, indent=2)
+    st.cache_data.clear()
+
+
+def contact_exists(voters, contact, current_epic):
+    for v in voters:
+        if (
+            v.get("contact") == contact
+            and v.get("epic_no") != current_epic
+        ):
+            return True
+    return False
 
 def load_users():
     if not USERS_FILE.exists():
@@ -181,3 +195,69 @@ if query != "":
                 f"🗺️ **AC / PS / SL:** "
                 f"{v.get('ac_no','-')} / {v.get('ps_no','-')} / {v.get('sl_no','-')}"
             )
+            # -------------------------------
+            # CONTACT SECTION (ADD / UPDATE)
+            # -------------------------------
+            contact_key = f"contact_edit_{v.get('epic_no')}"
+            existing_contact = v.get("contact")
+
+            st.divider()
+            st.markdown("📞 **Contact Information**")
+
+            # Initialize edit mode flag
+            if contact_key not in st.session_state:
+                st.session_state[contact_key] = False
+
+            # ---------- CONTACT EXISTS ----------
+            if existing_contact and not st.session_state[contact_key]:
+
+                col_val, col_btn = st.columns([3, 1])
+
+                with col_val:
+                    st.text_input(
+                        "Contact Number",
+                        value=existing_contact,
+                        disabled=True,
+                        key=f"view_{v.get('epic_no')}"
+                    )
+
+                with col_btn:
+                    if st.button("✏️ Update", key=f"update_{v.get('epic_no')}"):
+                        st.session_state[contact_key] = True
+                        st.rerun()
+
+            # ---------- ADD / EDIT MODE ----------
+            else:
+                contact_input = st.text_input(
+                    "Contact Number",
+                    value=existing_contact or "",
+                    placeholder="Enter 10-digit mobile number",
+                    key=f"edit_{v.get('epic_no')}"
+                )
+
+                col_save, col_cancel = st.columns([1, 1])
+
+                with col_save:
+                    if st.button("💾 Save", key=f"save_{v.get('epic_no')}"):
+
+                        if not contact_input.strip():
+                            st.warning("⚠️ Contact cannot be empty")
+
+                        elif contact_exists(voters, contact_input, v.get("epic_no")):
+                            st.error("❌ This contact number already exists for another voter")
+
+                        else:
+                            for voter in voters:
+                                if voter.get("epic_no") == v.get("epic_no"):
+                                    voter["contact"] = contact_input
+                                    break
+
+                            save_voters(DATA_FILE, voters)
+                            st.session_state[contact_key] = False
+                            st.success("✅ Contact saved successfully")
+                            st.rerun()
+
+                with col_cancel:
+                    if existing_contact and st.button("❌ Cancel", key=f"cancel_{v.get('epic_no')}"):
+                        st.session_state[contact_key] = False
+                        st.rerun()
