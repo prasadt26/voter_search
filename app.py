@@ -1,7 +1,7 @@
 import streamlit as st
 import json
 from pathlib import Path
-
+import pandas as pd
 # -------------------------------
 # AUTH CONFIG (FROM users.json)
 # -------------------------------
@@ -261,3 +261,56 @@ if query != "":
                     if existing_contact and st.button("❌ Cancel", key=f"cancel_{v.get('epic_no')}"):
                         st.session_state[contact_key] = False
                         st.rerun()
+            # -------------------------------
+            # VOTER FEEDBACK SECTION
+            # -------------------------------
+            st.divider()
+            st.markdown("🗳️ **Voter Preference (Pre-Poll Feedback)**")
+
+            feedback = v.get("feedback", {})
+
+            party = st.selectbox(
+                "Preferred Party",
+                ["", "INC", "BJP", "BRS", "Others", "Undecided"],
+                index=(
+                    ["", "INC", "BJP", "BRS", "Others", "Undecided"]
+                    .index(feedback.get("party", ""))
+                    if feedback.get("party", "") in ["INC", "BJP", "BRS", "Others", "Undecided"] else 0
+                ),
+                key=f"party_{v['epic_no']}"
+            )
+
+            candidate = st.text_input(
+                "Preferred Candidate",
+                value=feedback.get("candidate", ""),
+                key=f"candidate_{v['epic_no']}"
+            )
+
+            confidence = st.radio(
+                "Confidence Level",
+                ["Strong", "Leaning", "Undecided"],
+                index=(
+                    ["Strong", "Leaning", "Undecided"]
+                    .index(feedback.get("confidence"))
+                    if feedback.get("confidence") in ["Strong", "Leaning", "Undecided"] else 2
+                ),
+                horizontal=True,
+                key=f"confidence_{v['epic_no']}"
+            )
+
+            if st.button("📊 Save Feedback", key=f"save_feedback_{v['epic_no']}"):
+
+                for voter in voters:
+                    if voter.get("epic_no") == v.get("epic_no"):
+                        voter["feedback"] = {
+                            "party": party,
+                            "candidate": candidate,
+                            "confidence": confidence,
+                            "updated_by": st.session_state.get("username"),
+                            "updated_on": str(pd.Timestamp.now().date())
+                        }
+                        break
+
+                save_voters(DATA_FILE, voters)
+                st.success("✅ Voter feedback saved")
+                st.rerun()

@@ -16394,7 +16394,14 @@
     "sex": "M",
     "door_no": "4-2-177/2",
     "epic_no": "RKK1199802",
-    "contact": "9550073595"
+    "contact": "9550073595",
+    "feedback": {
+      "party": "INC",
+      "candidate": "XYZ",
+      "confidence": "Strong",
+      "updated_by": "admin",
+      "updated_on": "2026-01-28"
+    }
   },
   {
     "record_serial": 1125,
