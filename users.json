@@ -1,7 +1,7 @@
 {
   "admin": {
     "password": "admin123",
-    "divisions": "ALL"
+    "divisions": [31,32,33,34,24]
   },
   "user1": {
     "password": "user123",

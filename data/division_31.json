@@ -10640,7 +10640,14 @@
     "age": 30,
     "sex": "M",
     "door_no": "4-1-163/6",
-    "epic_no": "RKK1139873"
+    "epic_no": "RKK1139873",
+    "feedback": {
+      "party": "INC",
+      "candidate": "Asif Pasha ",
+      "confidence": "Strong",
+      "updated_by": "admin",
+      "updated_on": "2026-01-30"
+    }
   },
   {
     "record_serial": 732,
