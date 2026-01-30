@@ -196,6 +196,35 @@ if query != "":
                 f"{v.get('ac_no','-')} / {v.get('ps_no','-')} / {v.get('sl_no','-')}"
             )
             # -------------------------------
+            # VOTER SLIP VIEW BUTTON
+            # -------------------------------
+            ward_no = division_number  # selected division acts as ward
+            epic = v.get("epic_no")
+
+            voter_slip_url = (
+                "https://tsec.gov.in/voterSlipUlb.do"
+                f"?mode=printVoterSlip&rtype=R&dist=07&municipality_id=2"
+                f"&ward={ward_no}&IDCARD_NO={epic}"
+            )
+
+            st.markdown(
+                f"""
+                <a href="{voter_slip_url}" target="_blank">
+                    <button style="
+                        background-color:#4CAF50;
+                        color:white;
+                        padding:8px 16px;
+                        border:none;
+                        border-radius:6px;
+                        cursor:pointer;
+                        font-size:14px;">
+                        🧾 Voter Slip View
+                    </button>
+                </a>
+                """,
+                unsafe_allow_html=True
+            )
+            # -------------------------------
             # CONTACT SECTION (ADD / UPDATE)
             # -------------------------------
             contact_key = f"contact_edit_{v.get('epic_no')}"
